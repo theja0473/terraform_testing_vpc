@@ -1,6 +1,5 @@
-GitLab Repository Structure:
-lua
-Copy code
+## GitLab Repository Structure:
+```
 mlops-multi-cloud/
 |-- .gitlab-ci.yml
 |-- environments/
@@ -36,12 +35,12 @@ mlops-multi-cloud/
 |   |-- deploy.sh
 |   |-- destroy.sh
 |-- README.md
+```
 Terraform Modules:
 AWS Module - VPC (modules/aws/vpc/):
 
-hcl
-Copy code
-# main.tf
+### main.tf
+```
 provider "aws" {
   region = var.region
 }
@@ -49,8 +48,10 @@ provider "aws" {
 resource "aws_vpc" "main" {
   cidr_block = var.cidr_block
 }
+```
 
-# variables.tf
+### variables.tf
+```
 variable "region" {
   description = "AWS region"
 }
@@ -58,23 +59,25 @@ variable "region" {
 variable "cidr_block" {
   description = "CIDR block for the VPC"
 }
-
-# outputs.tf
+```
+### outputs.tf
+```
 output "vpc_id" {
   value = aws_vpc.main.id
 }
-AWS Module - EC2 (modules/aws/ec2/):
+```
+## AWS Module - EC2 (modules/aws/ec2/):
 
-hcl
-Copy code
-# main.tf
+### main.tf
+```
 resource "aws_instance" "example" {
   ami           = var.ami
   instance_type = var.instance_type
   vpc_security_group_ids = [var.security_group_id]
 }
-
-# variables.tf
+```
+### variables.tf
+```
 variable "ami" {
   description = "AMI for the EC2 instance"
 }
@@ -86,16 +89,17 @@ variable "instance_type" {
 variable "security_group_id" {
   description = "Security group ID"
 }
-
-# outputs.tf
+```
+### outputs.tf
+```
 output "instance_id" {
   value = aws_instance.example.id
 }
-Azure Module - VNET (modules/azure/vnet/):
+```
+## Azure Module - VNET (modules/azure/vnet/):
 
-hcl
-Copy code
-# main.tf
+### main.tf
+```
 provider "azurerm" {
   features = {}
 }
@@ -106,8 +110,9 @@ resource "azurerm_virtual_network" "main" {
   location            = var.location
   resource_group_name = var.resource_group_name
 }
-
-# variables.tf
+```
+### variables.tf
+```
 variable "name" {
   description = "Name of the virtual network"
 }
@@ -123,24 +128,26 @@ variable "location" {
 variable "resource_group_name" {
   description = "Name of the Azure resource group"
 }
-
-# outputs.tf
+```
+### outputs.tf
+```
 output "vnet_id" {
   value = azurerm_virtual_network.main.id
 }
-Azure Module - VM (modules/azure/vm/):
+```
+## Azure Module - VM (modules/azure/vm/):
 
-hcl
-Copy code
-# main.tf
+### main.tf
+```
 resource "azurerm_virtual_machine" "main" {
   name                  = var.name
   location              = var.location
   resource_group_name   = var.resource_group_name
   network_interface_ids = [var.network_interface_id]
 }
-
-# variables.tf
+```
+### variables.tf
+```
 variable "name" {
   description = "Name of the virtual machine"
 }
@@ -156,14 +163,15 @@ variable "resource_group_name" {
 variable "network_interface_id" {
   description = "ID of the network interface associated with the VM"
 }
-
-# outputs.tf
+```
+### outputs.tf
+```
 output "vm_id" {
   value = azurerm_virtual_machine.main.id
 }
-GitLab CI/CD Pipeline (.gitlab-ci.yml):
-yaml
-Copy code
+```
+### GitLab CI/CD Pipeline (.gitlab-ci.yml):
+```
 stages:
   - plan
   - apply
@@ -198,7 +206,8 @@ destroy:
   script:
     - terraform destroy -var-file=environments/dev/aws/terraform.tfvars -auto-approve
     - terraform destroy -var-file=environments/dev/azure/terraform.tfvars -auto-approve
-Note:
+```
+### NOTE:
 
 Replace placeholders like $AWS_ACCESS_KEY_ID and $AZURE_CLIENT_ID with your actual credentials.
 Make sure to configure GitLab CI/CD variables for sensitive information like credentials.
