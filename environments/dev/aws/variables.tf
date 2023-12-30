@@ -1,6 +1,7 @@
-variable "region" {
-  description = "AWS region"
+variable "sagemaker_role_name" {
+  description = "Name of the IAM role for SageMaker"
 }
 
-# Add your AWS variables here
-
+variable "sagemaker_policy_arn" {
+  description = "ARN of the policy attached to the IAM role for SageMaker"
+}

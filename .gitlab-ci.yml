@@ -1,2 +1,38 @@
-# Add your GitLab CI/CD configuration here
+stages:
+  - plan
+  - apply
+  - destroy
+  - deploy_genai
 
+variables:
+  AWS_ACCESS_KEY_ID: 
+  AWS_SECRET_ACCESS_KEY: 
+  AZURE_CLIENT_ID: 
+  AZURE_CLIENT_SECRET: 
+  AZURE_SUBSCRIPTION_ID: 
+  AZURE_TENANT_ID: 
+
+before_script:
+  - terraform --version
+  - terraform init
+
+plan:
+  stage: plan
+  script:
+    - terraform plan -var-file=environments/dev/aws/terraform.tfvars
+
+apply:
+  stage: apply
+  script:
+    - terraform apply -var-file=environments/dev/aws/terraform.tfvars -auto-approve
+
+destroy:
+  stage: destroy
+  script:
+    - terraform destroy -var-file=environments/dev/aws/terraform.tfvars -auto-approve
+
+deploy_genai:
+  stage: deploy_genai
+  script:
+    - terraform init
+    - terraform apply -var-file=environments/dev/aws/terraform.tfvars -target=module.sagemaker -auto-approve
